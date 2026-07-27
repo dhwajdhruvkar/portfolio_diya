@@ -1,0 +1,234 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Brand tokens live in a plain @theme (not @theme inline) so Tailwind emits them
+   as real CSS custom properties and generates matching utilities. The font tokens
+   must not be inlined: @theme inline resolves values at parse time, which would
+   flatten the next/font variables before the browser can supply them. */
+@theme {
+  --color-bg: #08070a;
+  --color-bg-deep: #000000;
+  --color-bg-2: #101015;
+  --color-fg: #edeae0;
+  --color-fg-dim: #9a968d;
+  --color-line: #23222a;
+  --color-line-bright: #3a3842;
+  --color-accent: #e4381f;
+  --color-accent-2: #ff5a3c;
+
+  /* Named `heading` rather than `display`: Tailwind v4 does not emit a
+     `font-display` utility, since the name collides in the font-* namespace. */
+  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-serif-accent: var(--font-instrument-serif), Georgia, "Times New Roman",
+    serif;
+  --font-body: var(--font-hanken), Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+
+  --text-hero: clamp(2.5rem, 9vw, 8rem);
+  --text-hero--line-height: 0.95;
+  --text-hero--letter-spacing: -0.02em;
+
+  --text-display: clamp(2.25rem, 7vw, 5.5rem);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-title: clamp(1.75rem, 4.5vw, 3.25rem);
+  --text-title--line-height: 1;
+  --text-title--letter-spacing: -0.02em;
+
+  --text-subtitle: clamp(1.375rem, 2.6vw, 2rem);
+  --text-subtitle--line-height: 1.1;
+  --text-subtitle--letter-spacing: -0.015em;
+
+  --text-lead: clamp(1.125rem, 1.9vw, 1.625rem);
+  --text-lead--line-height: 1.45;
+
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1.4;
+  --text-meta--letter-spacing: 0.14em;
+
+  --tracking-mono: 0.14em;
+  --tracking-mono-wide: 0.22em;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* shadcn semantic layer, remapped onto the dark brand palette so the installed
+   primitives inherit the same system. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: dark;
+
+  --background: var(--color-bg);
+  --foreground: var(--color-fg);
+  --card: var(--color-bg-2);
+  --card-foreground: var(--color-fg);
+  --popover: var(--color-bg-2);
+  --popover-foreground: var(--color-fg);
+  --primary: var(--color-fg);
+  --primary-foreground: var(--color-bg);
+  --secondary: var(--color-bg-2);
+  --secondary-foreground: var(--color-fg);
+  --muted: var(--color-bg-2);
+  --muted-foreground: var(--color-fg-dim);
+  --destructive: var(--color-accent);
+  --border: var(--color-line);
+  --input: var(--color-line);
+  --ring: var(--color-accent-2);
+  --radius: 0.25rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    font-family: var(--font-body);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    text-wrap: balance;
+  }
+
+  /* Near-black on scarlet clears AA at 4.6:1; off-white would only reach 3.6:1. */
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-2);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Lenis drives scrolling; native smooth scroll would fight it. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  /* Mono meta label: (01) — About, ©2026, tool chips. */
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: 1.4;
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+  }
+
+  .serif-accent {
+    font-family: var(--font-serif-accent);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-line-bright);
+  }
+
+  /* Subtle film grain. Inline SVG data URI keeps the project asset-free. */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .hide-native-cursor,
+  .hide-native-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* Marquee runs on a CSS animation so the reduced-motion block below freezes it
+   without any JavaScript involved. */
+@keyframes marquee-x {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
