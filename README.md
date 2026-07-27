@@ -24,14 +24,28 @@ space.
 
 ## Getting started
 
-Requires **Node 18+** (developed on Node 22) and **pnpm**.
+Requires **Node 18+** (developed on Node 22) and **pnpm**. If you don't have pnpm,
+install it with `npm install -g pnpm` or `corepack enable pnpm`.
 
 ```bash
+git clone https://github.com/dhwajdhruvkar/portfolio_diya.git
+cd portfolio_diya
 pnpm install
-pnpm dev     # http://localhost:3000
-pnpm build   # production build
-pnpm start   # serve the production build
-pnpm lint    # ESLint
+pnpm dev
+```
+
+Then open **http://localhost:3000**. Nothing else is required to run locally —
+there are no environment variables, API keys or external services, and all
+content is committed to the repo. (For production there is one optional variable,
+`NEXT_PUBLIC_SITE_URL`; see [Deploying](#deploying).)
+
+### All scripts
+
+```bash
+pnpm dev              # dev server with hot reload, http://localhost:3000
+pnpm build            # production build
+pnpm start            # serve the production build (run pnpm build first)
+pnpm lint             # ESLint
 pnpm check:contrast   # WCAG AA audit of the palette
 ```
 
